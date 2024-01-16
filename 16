@@ -1,21 +1,42 @@
-class Solution{
-    static int numberSequence(int m, int n)
-    {
-        // code here
-        List<List<Integer>> dp = new ArrayList<>();
-        for (int i = 0; i < m + 1; i++) {
-            List<Integer> row = new ArrayList<>();
-            for (int j = 0; j < n + 1; j++) {
-                if (i == 0 || j == 0 || i < j) {
-                    row.add(0);
-                } else if (j == 1) {
-                    row.add(i);
-                } else {
-                    row.add(dp.get(i - 1).get(j) + dp.get(i / 2).get(j - 1));
-      }
-            }
-            dp.add(row);
+class RandomizedSet {
+    ArrayList<Integer> nums;
+    HashMap<Integer, Integer> locs;
+    Random randomObj = new Random();
+    /** Intialize your data structure here.*/
+    public RandomizedSet() {
+        nums=new ArrayList<Integer>();
+        locs=new HashMap<Integer,Integer>();
+    }
+    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    public boolean insert(int val) {
+        if(locs.containsKey(val)) return false;
+        locs.put( val,nums.size());
+        nums.add(val);
+        return true;
+    }
+    /** Removes a value from the set. Returns true if the set contained the specified element. */
+    public boolean remove(int val) {
+        if ( ! locs.containsKey(val)) return false;
+        int loc = locs.get(val);
+        if(loc<nums.size()-1){
+           int lastone=nums.get(nums.size() -1);
+           nums.set(loc,lastone);
+           locs.put(lastone,loc);
         }
-        return dp.get(m).get(n);
+        locs.remove(val);
+    nums.remove(nums.size() - 1);
+    return true;
+    }
+    
+    public int getRandom() {
+        return nums.get(randomObj.nextInt(nums.size()));
     }
 }
+
+/**
+ * Your RandomizedSet object will be instantiated and called as such:
+ * RandomizedSet obj = new RandomizedSet();
+ * boolean param_1 = obj.insert(val);
+ * boolean param_2 = obj.remove(val);
+ * int param_3 = obj.getRandom();
+ */
